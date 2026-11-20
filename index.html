@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff7f4">
+  <meta name="description" content="Une petite lettre écrite avec le cœur.">
+  <title>Une lettre pour toi ♡</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #59434b;
+      --muted: #987b84;
+      --rose: #d98699;
+      --rose-dark: #bd637a;
+      --paper: #fffdf9;
+      --bg: #fff7f4;
+      --shadow: 0 24px 70px #9465731c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+      padding: 48px 20px;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 12% 18%, #ffe8ec 0, transparent 30%),
+        radial-gradient(ellipse at 88% 82%, #f7e9f4 0, transparent 32%),
+        var(--bg);
+      font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+    }
+
+    .page {
+      width: min(100%, 680px);
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--rose-dark);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 8vw, 4rem);
+      font-weight: 400;
+      letter-spacing: -.045em;
+    }
+
+    .intro {
+      max-width: 390px;
+      margin: 14px auto 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .scene {
+      position: relative;
+      width: min(100%, 440px);
+      height: 390px;
+      margin: 34px auto 8px;
+      perspective: 1100px;
+      transition: height 450ms ease;
+    }
+
+    .letter {
+      position: absolute;
+      z-index: 1;
+      top: 40px;
+      left: 50%;
+      width: min(82%, 350px);
+      min-height: 300px;
+      padding: 28px 30px 24px;
+      overflow-y: auto;
+      border: 1px solid #f1e7df;
+      border-radius: 5px;
+      background:
+        repeating-linear-gradient(transparent 0 31px, #e8d8d344 32px 33px),
+        var(--paper);
+      box-shadow: 0 10px 35px #76556418;
+      text-align: left;
+      opacity: 0;
+      transform: translate(-50%, 80px) scale(.92);
+      transform-origin: center bottom;
+      transition: transform 850ms cubic-bezier(.2, .8, .25, 1), opacity 450ms ease;
+      pointer-events: none;
+    }
+
+    .letter h2 {
+      margin: 0 0 16px;
+      color: var(--rose-dark);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      font-weight: 400;
+    }
+
+    .letter p {
+      margin: 0 0 12px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: .97rem;
+      line-height: 1.75;
+    }
+
+    .letter .signoff {
+      margin-top: 16px;
+      color: var(--rose-dark);
+      font-style: italic;
+    }
+
+    .envelope {
+      position: absolute;
+      z-index: 2;
+      right: 0;
+      bottom: 20px;
+      left: 0;
+      width: min(100%, 400px);
+      height: 245px;
+      margin: auto;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #eab9c5;
+      box-shadow: var(--shadow);
+    }
+
+    .envelope::before,
+    .envelope::after {
+      position: absolute;
+      z-index: 3;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+    }
+
+    .envelope::before {
+      background: linear-gradient(34deg, transparent 49.5%, #f5ced6 50%) left / 51% 100% no-repeat,
+                  linear-gradient(-34deg, transparent 49.5%, #f1c5cf 50%) right / 51% 100% no-repeat;
+    }
+
+    .envelope::after {
+      z-index: 4;
+      background: linear-gradient(148deg, transparent 49.5%, #e8b3c0 50%) left / 51% 100% no-repeat,
+                  linear-gradient(-148deg, transparent 49.5%, #edbfca 50%) right / 51% 100% no-repeat;
+    }
+
+    .flap {
+      position: absolute;
+      z-index: 5;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 58%;
+      background: #f3cbd4;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform: rotateX(0);
+      transform-origin: top;
+      transition: transform 550ms ease, z-index 0ms 275ms;
+      backface-visibility: hidden;
+    }
+
+    .seal {
+      position: absolute;
+      z-index: 6;
+      top: 43%;
+      left: 50%;
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border: 1px solid #ffffff80;
+      border-radius: 50%;
+      color: white;
+      background: var(--rose);
+      box-shadow: 0 4px 12px #9a536233;
+      font-size: 1.3rem;
+      transform: translate(-50%, -50%);
+      transition: opacity 250ms ease;
+    }
+
+    .sparkle {
+      position: absolute;
+      color: #d9a8b2;
+      font-size: 1.3rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .sparkle-one { top: 72px; left: 4%; }
+    .sparkle-two { top: 142px; right: 1%; animation-delay: .8s; }
+    .sparkle-three { right: 9%; bottom: 45px; font-size: 1rem; animation-delay: 1.4s; }
+
+    .toggle {
+      min-height: 52px;
+      padding: 0 25px;
+      border: 0;
+      border-radius: 999px;
+      color: white;
+      background: var(--rose-dark);
+      box-shadow: 0 8px 20px #bd637a33;
+      font: inherit;
+      font-size: .96rem;
+      font-weight: 650;
+      cursor: pointer;
+      transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .toggle:hover {
+      background: #a94e66;
+      box-shadow: 0 11px 24px #bd637a42;
+      transform: translateY(-2px);
+    }
+
+    .toggle:focus-visible {
+      outline: 3px solid #8e4559;
+      outline-offset: 4px;
+    }
+
+    .hint {
+      margin: 14px 0 0;
+      color: #a88d94;
+      font-size: .82rem;
+    }
+
+    .is-open .letter {
+      z-index: 3;
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+      pointer-events: auto;
+    }
+
+    .is-open .flap {
+      z-index: 1;
+      transform: rotateX(180deg);
+    }
+
+    .is-open .seal { opacity: 0; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-8deg); }
+      50% { transform: translateY(-9px) rotate(8deg); }
+    }
+
+    @media (max-width: 480px) {
+      .scene { height: 370px; margin-top: 24px; }
+      .envelope { height: 215px; bottom: 16px; }
+      .letter { top: 40px; min-height: 285px; padding: 23px 22px; }
+      .sparkle-one { top: 45px; }
+      .sparkle-two { top: 110px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <p class="eyebrow">quelques mots pour toi</p>
+    <h1>Une lettre du cœur</h1>
+    <p class="intro">J’avais envie de prendre le temps de t’écrire. Ouvre cette petite enveloppe quand tu veux. ♡</p>
+
+    <section class="scene" id="scene" aria-label="Une lettre dans une enveloppe">
+      <span class="sparkle sparkle-one" aria-hidden="true">✦</span>
+      <span class="sparkle sparkle-two" aria-hidden="true">♡</span>
+      <span class="sparkle sparkle-three" aria-hidden="true">✧</span>
+
+      <article class="letter" id="letter" aria-hidden="true" inert>
+        <h2>Mon amour,</h2>
+        <p>Pardon pour ce qui s’est passé et pour la peine que j’ai pu te faire. Je ne veux ni minimiser ce que tu ressens, ni chercher d’excuse : j’aurais dû agir autrement.</p>
+        <p>Tu comptes énormément pour moi. Je veux prendre le temps de t’écouter, de comprendre ce que tu as vécu et de te montrer, par mes actes, que je peux faire mieux.</p>
+        <p>Je ne te demande pas de me pardonner tout de suite. Prends le temps qu’il te faut. Quand tu en auras envie, je serai là pour en parler, avec douceur et honnêteté.</p>
+        <p class="signoff">Pardon, et je t’aime. ♡</p>
+      </article>
+
+      <div class="envelope" aria-hidden="true">
+        <div class="flap"></div>
+        <span class="seal">♡</span>
+      </div>
+    </section>
+
+    <button class="toggle" id="toggle" type="button" aria-expanded="false" aria-controls="letter">Ouvrir la lettre ♡</button>
+    <p class="hint" id="hint">Une petite attention, rien que pour toi</p>
+  </main>
+
+  <script>
+    const scene = document.querySelector("#scene");
+    const letter = document.querySelector("#letter");
+    const toggle = document.querySelector("#toggle");
+    const hint = document.querySelector("#hint");
+
+    toggle.addEventListener("click", () => {
+      const isOpen = toggle.getAttribute("aria-expanded") !== "true";
+      scene.classList.toggle("is-open", isOpen);
+      scene.style.height = isOpen ? `${letter.scrollHeight + 60}px` : "";
+      toggle.setAttribute("aria-expanded", String(isOpen));
+      toggle.textContent = isOpen ? "Refermer doucement ♡" : "Ouvrir la lettre ♡";
+      letter.setAttribute("aria-hidden", String(!isOpen));
+      letter.toggleAttribute("inert", !isOpen);
+      hint.textContent = isOpen ? "Prends tout le temps qu’il te faut" : "Une petite attention, rien que pour toi";
+    });
+  </script>
+</body>
+</html>
