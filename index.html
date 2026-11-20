@@ -22,11 +22,12 @@
 
     body {
       min-height: 100vh;
+      min-height: 100svh;
       margin: 0;
       display: grid;
       place-items: center;
       overflow-x: hidden;
-      padding: 48px 20px;
+      padding: max(24px, env(safe-area-inset-top)) 18px max(24px, env(safe-area-inset-bottom));
       color: var(--ink);
       background:
         radial-gradient(ellipse at 12% 18%, #ffe8ec 0, transparent 30%),
@@ -38,6 +39,7 @@
     .page {
       width: min(100%, 680px);
       text-align: center;
+      animation: page-enter 750ms cubic-bezier(.22, 1, .36, 1) both;
     }
 
     .eyebrow {
@@ -71,7 +73,7 @@
       height: 390px;
       margin: 34px auto 8px;
       perspective: 1100px;
-      transition: height 450ms ease;
+      transition: height 700ms cubic-bezier(.22, 1, .36, 1);
     }
 
     .letter {
@@ -93,7 +95,7 @@
       opacity: 0;
       transform: translate(-50%, 80px) scale(.92);
       transform-origin: center bottom;
-      transition: transform 850ms cubic-bezier(.2, .8, .25, 1), opacity 450ms ease;
+      transition: transform 720ms cubic-bezier(.22, 1, .36, 1), opacity 300ms ease;
       pointer-events: none;
     }
 
@@ -127,10 +129,19 @@
       width: min(100%, 400px);
       height: 245px;
       margin: auto;
+      padding: 0;
       overflow: hidden;
+      border: 0;
       border-radius: 8px;
+      color: inherit;
       background: #eab9c5;
       box-shadow: var(--shadow);
+      font: inherit;
+      cursor: pointer;
+      appearance: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition: transform 180ms ease, box-shadow 220ms ease;
     }
 
     .envelope::before,
@@ -184,7 +195,16 @@
       box-shadow: 0 4px 12px #9a536233;
       font-size: 1.3rem;
       transform: translate(-50%, -50%);
-      transition: opacity 250ms ease;
+      transition: opacity 250ms ease, transform 350ms cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .seal::after {
+      position: absolute;
+      inset: -5px;
+      border: 1px solid #ffffff99;
+      border-radius: inherit;
+      content: "";
+      animation: seal-glow 2.8s ease-out infinite;
     }
 
     .sparkle {
@@ -210,13 +230,27 @@
       font-size: .96rem;
       font-weight: 650;
       cursor: pointer;
-      transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+      transition: background 180ms ease, transform 180ms cubic-bezier(.2, .8, .2, 1), box-shadow 180ms ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
-    .toggle:hover {
-      background: #a94e66;
-      box-shadow: 0 11px 24px #bd637a42;
-      transform: translateY(-2px);
+    @media (hover: hover) and (pointer: fine) {
+      .toggle:hover {
+        background: #a94e66;
+        box-shadow: 0 11px 24px #bd637a42;
+        transform: translateY(-2px);
+      }
+
+      .envelope:hover { box-shadow: 0 30px 75px #94657330; }
+    }
+
+    .toggle:active { transform: scale(.96); }
+    .envelope:active { transform: scale(.985); }
+
+    .envelope:focus-visible {
+      outline: 3px solid var(--rose-dark);
+      outline-offset: 6px;
     }
 
     .toggle:focus-visible {
@@ -230,11 +264,29 @@
       font-size: .82rem;
     }
 
+    .signature {
+      width: min(100%, 680px);
+      margin: 26px 0 8px;
+      color: var(--muted);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: .9rem;
+      font-style: italic;
+      text-align: center;
+    }
+
+    .signature-heart {
+      display: inline-block;
+      margin-left: .2em;
+      color: var(--rose-dark);
+      animation: heartbeat 1.8s ease-in-out infinite;
+    }
+
     .is-open .letter {
       z-index: 3;
       opacity: 1;
       transform: translate(-50%, 0) scale(1);
       pointer-events: auto;
+      transition-delay: 80ms, 80ms;
     }
 
     .is-open .flap {
@@ -242,17 +294,37 @@
       transform: rotateX(180deg);
     }
 
-    .is-open .seal { opacity: 0; }
+    .is-open .seal {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(.75);
+    }
+
+    @keyframes page-enter {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     @keyframes float {
       0%, 100% { transform: translateY(0) rotate(-8deg); }
       50% { transform: translateY(-9px) rotate(8deg); }
     }
 
+    @keyframes seal-glow {
+      0% { opacity: .8; transform: scale(.8); }
+      100% { opacity: 0; transform: scale(1.45); }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15%, 35% { transform: scale(1.16); }
+      25%, 45% { transform: scale(1); }
+    }
+
     @media (max-width: 480px) {
       .scene { height: 370px; margin-top: 24px; }
       .envelope { height: 215px; bottom: 16px; }
       .letter { top: 40px; min-height: 285px; padding: 23px 22px; }
+      .letter p { font-size: 1rem; line-height: 1.8; }
       .sparkle-one { top: 45px; }
       .sparkle-two { top: 110px; }
     }
@@ -280,16 +352,16 @@
 
       <article class="letter" id="letter" aria-hidden="true" inert>
         <h2>Mon amour,</h2>
-        <p>Pardon pour ce qui s’est passé et pour la peine que j’ai pu te faire. Je ne veux ni minimiser ce que tu ressens, ni chercher d’excuse : j’aurais dû agir autrement.</p>
-        <p>Tu comptes énormément pour moi. Je veux prendre le temps de t’écouter, de comprendre ce que tu as vécu et de te montrer, par mes actes, que je peux faire mieux.</p>
-        <p>Je ne te demande pas de me pardonner tout de suite. Prends le temps qu’il te faut. Quand tu en auras envie, je serai là pour en parler, avec douceur et honnêteté.</p>
-        <p class="signoff">Pardon, et je t’aime. ♡</p>
+        <p>Je te demande pardon d’avoir oublié, même brièvement, ton tout premier travail, qui commence demain. Tu m’en avais parlé parce que c’est une étape importante pour toi, et j’aurais dû y prêter encore plus d’attention que d'habitude. Ça m’est revenu peu après, mais je sais que ça n’efface pas mon oubli ni la peine que ça a pu te faire meme si tu ammoindri ce dernier.</p>
+        <p>Je comprends que tu m’aies dit que je dois me faire pardonner, et je le prends au sérieux. C’est une belle étape : tu peux être fière de toi. Je veux t’encourager et être là pour te soutenir de ce nouveau parcours que tu entames.</p>
+        <p>Je ne te demande pas de passer dessus ni de me pardonner tout de suite. Je veux te montrer par mon attention et mes actes que ce que tu me racontes compte enormement pour ne pas dire gargantuesquement pour moi. Ne prends absolument pas tout le temps qu’il te faut ; je survivrais pas si tu me boudais.</p>
+        <p class="signoff">Je te souhaite une belle première journée. Pardon, et je t’aime tres fort. ♡</p>
       </article>
 
-      <div class="envelope" aria-hidden="true">
-        <div class="flap"></div>
-        <span class="seal">♡</span>
-      </div>
+      <button class="envelope" id="envelope" type="button" aria-label="Ouvrir la lettre" aria-expanded="false" aria-controls="letter">
+        <span class="flap"></span>
+        <span class="seal" aria-hidden="true">♡</span>   
+      </button>
     </section>
 
     <button class="toggle" id="toggle" type="button" aria-expanded="false" aria-controls="letter">Ouvrir la lettre ♡</button>
@@ -300,18 +372,42 @@
     const scene = document.querySelector("#scene");
     const letter = document.querySelector("#letter");
     const toggle = document.querySelector("#toggle");
+    const envelope = document.querySelector("#envelope");
     const hint = document.querySelector("#hint");
 
-    toggle.addEventListener("click", () => {
-      const isOpen = toggle.getAttribute("aria-expanded") !== "true";
+    function fitSceneToLetter() {
+      scene.style.height = `${letter.scrollHeight + 60}px`;
+    }
+
+    function setLetterOpen(isOpen) {
       scene.classList.toggle("is-open", isOpen);
-      scene.style.height = isOpen ? `${letter.scrollHeight + 60}px` : "";
+      if (isOpen) fitSceneToLetter();
+      else scene.style.height = "";
       toggle.setAttribute("aria-expanded", String(isOpen));
+      envelope.setAttribute("aria-expanded", String(isOpen));
+      envelope.setAttribute("aria-label", isOpen ? "Refermer la lettre" : "Ouvrir la lettre");
       toggle.textContent = isOpen ? "Refermer doucement ♡" : "Ouvrir la lettre ♡";
       letter.setAttribute("aria-hidden", String(!isOpen));
       letter.toggleAttribute("inert", !isOpen);
       hint.textContent = isOpen ? "Prends tout le temps qu’il te faut" : "Une petite attention, rien que pour toi";
+    }
+
+    toggle.addEventListener("click", () => {
+      const isOpen = toggle.getAttribute("aria-expanded") !== "true";
+      setLetterOpen(isOpen);
     });
+
+    envelope.addEventListener("click", () => {
+      const isOpen = toggle.getAttribute("aria-expanded") !== "true";
+      setLetterOpen(isOpen);
+    });
+
+    window.addEventListener("resize", () => {
+      if (toggle.getAttribute("aria-expanded") === "true") fitSceneToLetter();
+    }, { passive: true });
   </script>
 </body>
+
+  <footer class="signature">Fait avec plein d’amour par ton petit chat <span class="signature-heart" aria-hidden="true">♡</span></footer>
+
 </html>
